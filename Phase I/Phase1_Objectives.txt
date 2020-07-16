@@ -1,0 +1,4 @@
+1.To gain experience with the design and development of a relatively larger software project
+2.To gain practical experience in OOP design and development, interacting with a data baseand GUI implementation.
+3.To gain the experience of real-world data analysis.
+4.To use engineering tools (python packages)  to design and analysing engineering problems
