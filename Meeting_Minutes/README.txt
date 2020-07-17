@@ -1,1 +1,1 @@
-Here are where meeting minutes are stored.
+Here are where meeting minutes are stored
