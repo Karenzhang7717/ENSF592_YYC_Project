@@ -1,19 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jul 16 15:49:16 2020
-
-@author: kailunzhang
-"""
-
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jul 16 11:00:03 2020
-
-@author: kailunzhang
-"""
 
 from Map import *
 from tkinter import *
@@ -80,6 +64,10 @@ def open_map():
       
 
     
+def updateDepositLabel(status) :
+    #status_txt.set("successfully loaded database")
+    status_txt.set(status)
+    return status_txt
 
       
 
@@ -101,14 +89,6 @@ label2 = ttk.Label(left,text = "Year")
 combobox2 = ttk.Combobox(left,width = 15 )
 combobox2['value'] = ("2016","2017","2018")
 
-# =============================================================================
-# btn1 = Button(left,text="Read",height=3,width=20,command = read_data) 
-# btn2 = Button(left,text="Sort",height=3,width=20,command = sort_data)   
-# btn3 = Button(left,text="Analysis",height=3,width=20,command = analyze_data)  
-# btn4 = Button(left,text="Map",height=3,width=20,command = open_map) 
-# =============================================================================
-
-
 btn1 = Button(left,text="Read",height=3,width=20,command=read_2016) 
 btn2 = Button(left,text="Sort",height=3,width=20)   
 btn3 = Button(left,text="Analysis",height=3,width=20)  
@@ -119,11 +99,6 @@ label3=ttk.Label(left, text = "status:")
 status_txt = StringVar()
 status_txt.set('status messages')
 label4 = ttk.Label(left,textvariable=status_txt)
-
-def updateDepositLabel(status) :
-    #status_txt.set("successfully loaded database")
-    status_txt.set(status)
-    return status_txt
 
 left.pack(side="left", expand=True, fill="both")
 right.pack(side="right", expand=True, fill="both")
