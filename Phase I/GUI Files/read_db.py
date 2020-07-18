@@ -63,33 +63,47 @@ def analyze_yearly(type_):
     plt.show()
 
 
+def get_map_coordinate(sorted_df, type_):
+    """
+    Return the name and map coordinate of the road with most traffic volume or accidents
+    :param sorted_df: dataframe sorted in descending order of volume or count
+    :param type_: a string of either 'Vol' for traffic volume or 'Accident' for traffic accidents
+    :return: road name, and coodinates in a tuple
+    """
+
+
+
 def main():
     pd.options.display.max_columns = None
     pd.options.display.width = None
 
     df_volume2016 = read_data('Vol', '2016')
-    print(df_volume2016)
-    print(sort_data(df_volume2016, 'Vol'))
-
-    df_volume2017 = read_data('Vol', '2017')
-    print(df_volume2017)
-    print(sort_data(df_volume2017, 'Vol'))
-
-    df_volume2018 = read_data('Vol', '2018')
-    print(df_volume2018)
-    print(sort_data(df_volume2018, 'Vol'))
-
-    df_incident2016 = read_data('Accident', '2016')
-    print(df_incident2016)
-    print(sort_data(df_incident2016, 'Accident'))
-
-    df_incident2017 = read_data('Accident', '2017')
-    print(df_incident2017)
-    print(sort_data(df_incident2017, 'Accident'))
+    sorted_df_volume2016 = sort_data(df_volume2016, 'Vol')
+    # print(df_volume2016)
+    # print(sorted_df_volume2016)
+    print(get_map_coordinate(sorted_df_volume2016, 'Vol'))
+    #
+    # df_volume2017 = read_data('Vol', '2017')
+    # print(df_volume2017)
+    # print(sort_data(df_volume2017, 'Vol'))
+    #
+    # df_volume2018 = read_data('Vol', '2018')
+    # print(df_volume2018)
+    # print(sort_data(df_volume2018, 'Vol'))
+    #
+    # df_incident2016 = read_data('Accident', '2016')
+    # print(df_incident2016)
+    # print(sort_data(df_incident2016, 'Accident'))
+    #
+    # df_incident2017 = read_data('Accident', '2017')
+    # print(df_incident2017)
+    # print(sort_data(df_incident2017, 'Accident'))
 
     df_incident2018 = read_data('Accident', '2018')
-    print(df_incident2018)
-    print(sort_data(df_incident2018, 'Accident'))
+    sorted_df_incident2018 = sort_data(df_incident2018, 'Accident')
+    # print(df_incident2018)
+    # print(sorted_df_incident2018)
+    print(get_map_coordinate(sorted_df_incident2018, 'Accident'))
 
     # analyze_yearly('Vol')
     # analyze_yearly('Accident')

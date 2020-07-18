@@ -1,4 +1,4 @@
-
+from Read_db import *
 from Map import *
 from tkinter import *
 from tkinter import ttk
