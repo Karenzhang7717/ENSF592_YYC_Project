@@ -13,7 +13,7 @@ class Map:
     
     def create_Map(self):
         file_name = self.kind_+'_'+self.year_+'.html'
-        self.map_.save(file_name)
+        
 
         # Call populate_Markers
         print("Populating markers")
@@ -24,6 +24,7 @@ class Map:
         
 
         # TODO: return file path.
+        self.map_.save(file_name)
         print("Returning file name: ", file_name)
         return file_name
 
