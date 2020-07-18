@@ -19,17 +19,41 @@ from Map import *
 from tkinter import *
 from tkinter import ttk
 
+import pandas as pd
+
+from pymongo import MongoClient
+
+def read_data(type_, year):
+    """
+    Return traffic record for the specified type and year
+    :param type_: a string of either 'Vol' for traffic volume or 'Accident' for traffic accidents
+    :param year: a string for year '2016', '2017' or '2018'
+    :return: traffic records stored in a dataframe
+    """
+    client = MongoClient()
+    db = client['CalgaryTraffic' + type_ + year]
+    df = pd.DataFrame(list(db[type_ + year].find())).drop(columns = '_id')
+    return df
 
 
-def read_data(file):
-    pass
+def read_2016():
+    df_volume2016 = read_data('Vol', '2016')
+  
+    df = pd.DataFrame(df_volume2016)
+    cols = list(df.columns)
+    
+    tree = ttk.Treeview(right)
+    tree.pack()
+    tree["columns"] = cols
+    for i in cols:
+        tree.column(i, anchor="w")
+        tree.heading(i, text=i, anchor='w')
+    
+    for index, row in df.iterrows():
+        tree.insert("",0,text=index,values=list(row))
 
-def sort_data(file):
-    pass
 
-
-def analyze_data(file):
-    pass
+    tree.pack()    
 
 
 def open_map():
@@ -85,7 +109,7 @@ combobox2['value'] = ("2016","2017","2018")
 # =============================================================================
 
 
-btn1 = Button(left,text="Read",height=3,width=20) 
+btn1 = Button(left,text="Read",height=3,width=20,command=read_2016) 
 btn2 = Button(left,text="Sort",height=3,width=20)   
 btn3 = Button(left,text="Analysis",height=3,width=20)  
 btn4 = Button(left,text="Map",height=3,width=20, command = open_map) 
