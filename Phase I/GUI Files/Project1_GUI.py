@@ -42,11 +42,11 @@ def open_map():
     #Get the type and year user has selected
     map_type = combobox1.get()
     map_year = combobox2.get()
-    print("This is map type:",map_type)
 
     if(map_type is not "" and map_year is not ""):
 
-        #Get the coordinate and location of the street with the most trafiic/accidents from the list specified by map_type and map_year
+        #TODO: Get the coordinate and location of the street with the most trafiic/accidents from the list specified by map_type and map_year
+
         map_object = Map(map_type, map_year) # Map(map_type,map_year,map_coordinate, map_location)
         # Update status on GUI
         updateDepositLabel(""+map_object.get_File_Name()+"\ncreated")
