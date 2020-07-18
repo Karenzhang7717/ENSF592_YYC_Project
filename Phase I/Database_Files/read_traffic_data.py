@@ -12,7 +12,7 @@ def read_data(type_, year):
     """
     client = MongoClient()
     db = client['CalgaryTraffic' + type_ + year]
-    df = pd.DataFrame(list(db[type_ + year].find()))
+    df = pd.DataFrame(list(db[type_ + year].find())).drop(columns = '_id')
     return df
 
 
@@ -64,6 +64,9 @@ def analyze_yearly(type_):
 
 
 def main():
+    pd.options.display.max_columns = None
+    pd.options.display.width = None
+
     df_volume2016 = read_data('Vol', '2016')
     print(df_volume2016)
     print(sort_data(df_volume2016, 'Vol'))
@@ -88,8 +91,8 @@ def main():
     print(df_incident2018)
     print(sort_data(df_incident2018, 'Accident'))
 
-    analyze_yearly('Vol')
-    analyze_yearly('Accident')
+    # analyze_yearly('Vol')
+    # analyze_yearly('Accident')
 
 
 if __name__ == '__main__':
