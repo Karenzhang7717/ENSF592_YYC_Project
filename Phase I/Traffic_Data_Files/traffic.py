@@ -2,18 +2,28 @@ import pandas as pd
 from pymongo import MongoClient
 
 def csv_to_dict(filename):
+    """
+    Convert a csv file to a collection of dictionaries
+    :param filename: name of data file
+    :return: a collection of dictionaries
+    """
     data = pd.read_csv(filename)
     data.columns = [x.lower() for x in data.columns]
     return data.to_dict('records')
 
 def extract_2018_accidents(filename):
+    """
+    Extract 2018 traffic accident data from file and return a collection of dictionaries
+    :param filename: name of data file
+    :return: a collection of dictionaries
+    """
     data = pd.read_csv(filename)
     data = data[data['id'].str.startswith('2018')]
     data.columns = [x.lower() for x in data.columns]
     return data.to_dict('records')
 
 def main():
-
+    # Read 2016 - 2018 traffic volume and accident records into mongodb
     client = MongoClient()
     # database1 = client['CalgaryTrafficVol2016']
     # collection1 = database1['Vol2016']
