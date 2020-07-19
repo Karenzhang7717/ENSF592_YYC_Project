@@ -9,7 +9,8 @@ The file runs the GUI for the Calgary Traffic App.
 
 from tkinter import *
 from tkinter import ttk
-
+from read_db import *
+from Map import *
 
 #GUI class acts as an interface between the user and the traffic and mapping objects.
 
@@ -89,6 +90,25 @@ class GUI:
         self.status_.set("Read: "+ data_type + " " + data_year)
 
         #TODO add read operation
+
+        if data_type== "Traffic Volume":
+            type_ = "Vol"
+        if data_year == "Accident":
+            type_ = "Accident"
+
+        df = read_data(type_, data_year)
+
+        cols = list(df.columns)
+        tree = ttk.Treeview(self.right)
+        tree["columns"] = cols
+        for i in cols:
+            tree.column(i, anchor="w")
+            tree.heading(i, text=i, anchor='w')
+
+        for index, row in df.iterrows():
+            tree.insert("", 0, text=index, values=list(row))
+
+        tree.pack()
 
 
     #The sorts function sorts data of selected type/year
