@@ -51,10 +51,23 @@ class CalgaryTrafficGUI:
         root.mainloop()
 
     def read(self):
-        type_ = self.combobox1.get()
-        year = self.combobox2.get()
 
-        if type is not "" and year is not "":
+        global type_
+        global year
+        # type_=self.combobox1.get()
+        # year=self.combobox2.get()
+
+        type_ = ""
+        year = ""
+
+        if type_ is not "" and year is not "":
+
+            if self.combobox1.get() == "Traffic Volume":
+                type_ = "Vol"
+            if self.combobox2.get() == "Accident":
+                type_ = "Accident"
+            year = self.combobox2.get()
+
             df = read_data(type_, year)
 
             cols = list(df.columns)
@@ -81,23 +94,23 @@ class CalgaryTrafficGUI:
         map_year = self.combobox2.get()
 
         if map_type is not "" and map_year is not "":
-
             # TODO: Get the coordinate and location of the street with the most traffic/accidents from the list specified by map_type and map_year
 
             map_object = Map(map_type, map_year)  # Map(map_type,map_year,map_coordinate, map_location)
-            # Update status on GUI
-            self.update_deposit_label("" + map_object.get_File_Name() + "\ncreated")
-        else:
-            self.update_deposit_label("Error: Select Type/Year")
-
-    def update_deposit_label(self, status):
-         self.status_txt.set("successfully loaded database")
-         self.status_txt.set(status)
-         return self.status_txt
+    #         # Update status on GUI
+    #         self.update_deposit_label("" + map_object.get_File_Name() + "\ncreated")
+    #     else:
+    #         self.update_deposit_label("Error: Select Type/Year")
+    #
+    # def update_deposit_label(self, status):
+    #      self.status_txt.set("successfully loaded database")
+    #      self.status_txt.set(status)
+    #      return self.status_txt
 
 
 def main():
     CalgaryTrafficGUI()
+
 
 if __name__ == '__main__':
     main()
