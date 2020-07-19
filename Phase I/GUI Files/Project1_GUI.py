@@ -1,4 +1,5 @@
-from Read_db import *
+import read_db
+from read_db import *
 from Map import *
 from tkinter import *
 from tkinter import ttk
@@ -10,29 +11,29 @@ class CalgaryTrafficGUI:
     def __init__(self):
         root = Tk()
 
-        left = Frame(root, width=300, height=1500, borderwidth=2, relief="solid", bg="#a6a6a6")
+        self.left = Frame(root, width=300, height=1500, borderwidth=2, relief="solid", bg="#a6a6a6")
         self.right = Frame(root, width=800, height=1500, borderwidth=2, relief="solid")
 
-        label1 = ttk.Label(left, text="Type")
-        self.combobox1 = ttk.Combobox(left, text="type", width=15)
+        label1 = ttk.Label(self.left, text="Type")
+        self.combobox1 = ttk.Combobox(self.left, text="type", width=15)
         self.combobox1['value'] = ("Traffic Volume", "Accident")
 
-        label2 = ttk.Label(left, text="Year")
-        self.combobox2 = ttk.Combobox(left, width=15)
+        label2 = ttk.Label(self.left, text="Year")
+        self.combobox2 = ttk.Combobox(self.left, width=15)
         self.combobox2['value'] = ("2016", "2017", "2018")
 
-        btn1 = Button(left, text="Read", height=3, width=20, command=CalgaryTrafficGUI.read())
-        btn2 = Button(left, text="Sort", height=3, width=20)
-        btn3 = Button(left, text="Analysis", height=3, width=20)
-        btn4 = Button(left, text="Map", height=3, width=20, command=CalgaryTrafficGUI.open_map())
+        btn1 = Button(self.left, text="Read", height=3, width=20, command=CalgaryTrafficGUI.read(self))
+        btn2 = Button(self.left, text="Sort", height=3, width=20)
+        btn3 = Button(self.left, text="Analysis", height=3, width=20)
+        btn4 = Button(self.left, text="Map", height=3, width=20, command=CalgaryTrafficGUI.open_map(self))
 
-        label3 = ttk.Label(left, text="status:")
+        label3 = ttk.Label(self.left, text="status:")
 
         self.status_txt = StringVar()
         self.status_txt.set('status messages')
-        label4 = ttk.Label(left, textvariable=self.status_txt)
+        label4 = ttk.Label(self.left, textvariable=self.status_txt)
 
-        left.pack(side="left", expand=True, fill="both")
+        self.left.pack(side="left", expand=True, fill="both")
         self.right.pack(side="right", expand=True, fill="both")
 
         label1.pack()
@@ -56,19 +57,17 @@ class CalgaryTrafficGUI:
         if type is not "" and year is not "":
             df = read_data(type_, year)
 
-        cols = list(df.columns)
+            cols = list(df.columns)
+            tree = ttk.Treeview(self.right)
+            tree["columns"] = cols
+            for i in cols:
+                tree.column(i, anchor="w")
+                tree.heading(i, text=i, anchor='w')
 
-        tree = ttk.Treeview(self.right)
-        tree.pack()
-        tree["columns"] = cols
-        for i in cols:
-            tree.column(i, anchor="w")
-            tree.heading(i, text=i, anchor='w')
+            for index, row in df.iterrows():
+                tree.insert("", 0, text=index, values=list(row))
 
-        for index, row in df.iterrows():
-            tree.insert("", 0, text=index, values=list(row))
-
-        tree.pack()
+            tree.pack()
 
     def open_map(self):
         # Map Constructor Definition:
@@ -88,19 +87,17 @@ class CalgaryTrafficGUI:
             map_object = Map(map_type, map_year)  # Map(map_type,map_year,map_coordinate, map_location)
             # Update status on GUI
             self.update_deposit_label("" + map_object.get_File_Name() + "\ncreated")
-
         else:
             self.update_deposit_label("Error: Select Type/Year")
 
     def update_deposit_label(self, status):
-        # status_txt.set("successfully loaded database")
-        self.status_txt.set(status)
-        return self.status_txt
+         self.status_txt.set("successfully loaded database")
+         self.status_txt.set(status)
+         return self.status_txt
 
 
 def main():
     CalgaryTrafficGUI()
-
 
 if __name__ == '__main__':
     main()
