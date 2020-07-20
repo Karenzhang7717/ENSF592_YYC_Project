@@ -29,6 +29,7 @@ class GUI:
 
         self.left_ = Frame(self.root_, width=300, height=1500, borderwidth=2, relief="solid", bg="#a6a6a6")
         self.right_ = Frame(self.root_, width=800, height=1500, borderwidth=2, relief="solid")
+        self.tree = ttk.Treeview(self.right_)
 
 
         #Create a combobox and label for data type value
@@ -53,7 +54,6 @@ class GUI:
         self.btn2_ = Button(self.left_, text="Sort", height=3, width=20, command=self.sort)
         self.btn3_ = Button(self.left_, text="Analysis", height=3, width=20, command=self.analyze)
         self.btn4_ = Button(self.left_, text="Map", height=3, width=20, command=self.open_map)
-
 
         #Create a new label thats a String Var
 
@@ -86,6 +86,8 @@ class GUI:
 
     def read(self):
 
+        self.tree.destroy()
+
         data_type,data_year = self.get_Combobox_value()
         self.status_.set("Read: "+ data_type + " " + data_year)
 
@@ -93,32 +95,57 @@ class GUI:
 
         if data_type== "Traffic Volume":
             type_ = "Vol"
-        if data_year == "Accident":
+        if data_type == "Traffic Accident":
             type_ = "Accident"
 
         df = read_data(type_, data_year)
 
         cols = list(df.columns)
-        tree = ttk.Treeview(self.right)
-        tree["columns"] = cols
+        self.tree = ttk.Treeview(self.right_)
+        self.tree["columns"] = cols
         for i in cols:
-            tree.column(i, anchor="w")
-            tree.heading(i, text=i, anchor='w')
+            self.tree.column(i, anchor="w")
+            self.tree.heading(i, text=i, anchor='w')
 
         for index, row in df.iterrows():
-            tree.insert("", 0, text=index, values=list(row))
+            self.tree.insert("", "end", text=index, values=list(row))
 
-        tree.pack()
+        self.tree.pack(fill="both",expand=True)
 
 
     #The sorts function sorts data of selected type/year
 
     def sort(self):
 
+        self.tree.destroy()
+
         data_type,data_year = self.get_Combobox_value()
         self.status_.set("Sort: "+ data_type + " " + data_year)
 
-        #TODO add sort operation
+        if data_type== "Traffic Volume":
+            type_ = "Vol"
+        if data_type == "Traffic Accident":
+            type_ = "Accident"
+
+        df = read_data(type_, data_year)
+
+
+        df_sorted=sort_data(df, type_)
+
+        cols = list(df_sorted.columns)
+        self.tree = ttk.Treeview(self.right_)
+        self.tree["columns"] = cols
+        for i in cols:
+            self.tree.column(i, anchor="w")
+            self.tree.heading(i, text=i, anchor='w')
+
+
+        for index, row in df_sorted.iterrows():
+            self.tree.insert("", "end", text=index, values=list(row))
+
+
+        self.tree.pack(fill="both",expand=1)
+
 
 
     #The analyze function analyze data of selected type/year
@@ -127,6 +154,10 @@ class GUI:
 
         data_type,data_year = self.get_Combobox_value()
         self.status_.set("Analyze: "+ data_type + " \n" + data_year)
+
+
+        analyze_yearly(data_type)
+
 
         #TODO add analyze operation
 
@@ -153,12 +184,15 @@ class GUI:
     
 
 
+
+
 #The main function creates a tkinter object named root and passes root to a GUI object. The main function houses the mainloop for root
 
 def main():
     root = Tk()
     GUI(root)
     root.mainloop()
+
 
 if __name__ == "__main__":
     main()
