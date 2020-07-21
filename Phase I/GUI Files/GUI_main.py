@@ -77,9 +77,11 @@ class GUI:
         self.right.pack(side="right", expand=True, fill="both")
 
 
-    # The read function reads data of selected type/year onto the right frame
-
     def read(self):
+        """
+        Reads the data from user selected data type and year, outputs the table displaying all the data
+        and updates the status message
+        """
 
         self.update_type_year()
 
@@ -90,9 +92,12 @@ class GUI:
         self.status.set("Successfully read: " + self.type_ + " \n" + self.year + " from database")
 
 
-    # The sorts function sorts data of selected type/year
 
     def sort(self):
+        """
+        Sorts the data from user selected data type and year, outputs the table displaying all the sorted data
+        and updates the status message
+        """
 
         self.update_type_year()
 
@@ -105,9 +110,13 @@ class GUI:
         self.status.set("Successfully sort: \n" + self.type_ + " " + self.year)
 
 
-    # The analyze function analyze data of selected type/year
+
 
     def analyze(self):
+        """
+        Analyze the data from user selected data type and year, display the plot onto GUI
+        and updates the status message
+        """
 
         self.update_type_year()
 
@@ -128,9 +137,11 @@ class GUI:
         self.status.set("Sucessfully analyzed: " + self.type_)
 
 
-    # The open_map function creates a map with a marker denoting largest value of selected type/year
-
     def open_map(self):
+        """
+         Creates a map with a marker denoting largest value of selected type/year. the map is saved in html file
+         under the same folder once it's called
+        """
 
         self.update_type_year()
 
@@ -174,9 +185,12 @@ class GUI:
         self.status.set("Successfully written to map: \n" + self.type_ + " " + self.year)
 
 
-    # Update self.type_ and self.year
+
 
     def update_type_year(self):
+        """
+        Update self.type_ and self.year according to user selection from combobox
+        """
         data_type = self.combobox1.get()
         data_year = self.combobox2.get()
 
@@ -185,15 +199,19 @@ class GUI:
         self.year = data_year
 
 
-    # Clear_right_frame
-
     def clear_frame(self):
+        """
+        clears the right frame
+        """
         for widget in self.right.winfo_children():
             widget.destroy()
 
-    # The output_table function outputs the table for the read and sort functions. Receives the desired dataframe (df) to be outputted.
 
     def output_table(self, df):
+        """
+        :param df: the desired dataframe to be outputted
+        Outputs the table for the read and sort functions
+        """
         self.clear_frame();
 
         cols = list(df.columns)
