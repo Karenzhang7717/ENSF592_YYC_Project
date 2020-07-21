@@ -12,7 +12,7 @@ def read_data(type_, year):
     """
     client = MongoClient()
     db = client['CalgaryTraffic' + type_ + year]
-    df = pd.DataFrame(list(db[type_ + year].find())).drop(columns = '_id')
+    df = pd.DataFrame(list(db[type_ + year].find()))
     return df
 
 
@@ -55,13 +55,17 @@ def analyze_yearly(type_):
     y = []
     for year in range(2016, 2019):
         y.append(yearly_sum(type_, year))
+    #something about adding subplots
+    
     plt.figure()
+    
     plt.plot(range(2016, 2019), y)
     plt.xlabel('Year')
     plt.xticks(range(2016, 2019))
     plt.ylabel('Traffic ' + type_)
     plt.title('Traffic ' + type_ + ' from 2016 - 2018')
     plt.show()
+    return plt
 
 
 def get_most_vol_coordinate(sorted_df):
@@ -90,9 +94,10 @@ def get_most_accident_coord(df, sorted_df):
     """
     loc = sorted_df.axes[0][0][0]
     coord = df[df['incident info'] == loc]['location'].to_frame().iloc[0,0]
+
     return loc, coord
 
-
+"""
 def main():
     pd.options.display.max_columns = None
     pd.options.display.width = None
@@ -139,3 +144,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+"""
