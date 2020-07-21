@@ -27,7 +27,7 @@ def sort_data(df, type_):
         return df.sort_values(by='volume', ascending=False)
     else:
         return df.groupby(['incident info'])['count'].value_counts().sort_values(ascending=False)\
-            .rename_axis(['incident info', 'incident']).to_frame()
+            .rename_axis(['incident info', 'incident']).to_frame().reset_index().drop(columns = 'incident')
 
 
 def yearly_sum(type_, year):
@@ -92,7 +92,7 @@ def get_most_accident_coord(df, sorted_df):
     :param sorted_df: dataframe sorted in descending order of incident count
     :return: road name, and coodinates in a tuple
     """
-    loc = sorted_df.axes[0][0][0]
+    loc = sorted_df.iloc[0,0]
     coord = df[df['incident info'] == loc]['location'].to_frame().iloc[0,0]
 
     return loc, coord
@@ -102,44 +102,44 @@ def main():
     pd.options.display.max_columns = None
     pd.options.display.width = None
 
-    df_volume2016 = read_data('Vol', '2016')
-    sorted_df_volume2016 = sort_data(df_volume2016, 'Vol')
-    print(df_volume2016)
-    print(sorted_df_volume2016)
-    print(get_most_vol_coordinate(sorted_df_volume2016))
+    # df_volume2016 = read_data('Vol', '2016')
+    # sorted_df_volume2016 = sort_data(df_volume2016, 'Vol')
+    # print(df_volume2016)
+    # print(sorted_df_volume2016)
+    # print(get_most_vol_coordinate(sorted_df_volume2016))
+    #
+    # df_volume2017 = read_data('Vol', '2017')
+    # sorted_df_volume2017 = sort_data(df_volume2017, 'Vol')
+    # print(df_volume2017)
+    # print(sorted_df_volume2017)
+    # print(get_most_vol_coordinate(sorted_df_volume2017))
+    #
+    # df_volume2018 = read_data('Vol', '2018')
+    # sorted_df_volume2018 = sort_data(df_volume2018, 'Vol')
+    # print(df_volume2018)
+    # print(sorted_df_volume2018)
+    # print(get_most_vol_coordinate(sorted_df_volume2018))
+    #
+    # df_incident2016 = read_data('Accident', '2016')
+    # sorted_df_incident2016 = sort_data(df_incident2016, 'Accident')
+    # print(df_incident2016)
+    # print(sorted_df_incident2016)
+    # print(get_most_accident_coord(df_incident2016, sorted_df_incident2016))
+    #
+    # df_incident2017 = read_data('Accident', '2017')
+    # sorted_df_incident2017 = sort_data(df_incident2017, 'Accident')
+    # print(df_incident2017)
+    # print(sorted_df_incident2017)
+    # print(get_most_accident_coord(df_incident2017, sorted_df_incident2017))
+    #
+    # df_incident2018 = read_data('Accident', '2018')
+    # sorted_df_incident2018 = sort_data(df_incident2018, 'Accident')
+    # print(df_incident2018)
+    # print(sorted_df_incident2018)
+    # print(get_most_accident_coord(df_incident2018, sorted_df_incident2018))
 
-    df_volume2017 = read_data('Vol', '2017')
-    sorted_df_volume2017 = sort_data(df_volume2017, 'Vol')
-    print(df_volume2017)
-    print(sorted_df_volume2017)
-    print(get_most_vol_coordinate(sorted_df_volume2017))
-
-    df_volume2018 = read_data('Vol', '2018')
-    sorted_df_volume2018 = sort_data(df_volume2018, 'Vol')
-    print(df_volume2018)
-    print(sorted_df_volume2018)
-    print(get_most_vol_coordinate(sorted_df_volume2018))
-
-    df_incident2016 = read_data('Accident', '2016')
-    sorted_df_incident2016 = sort_data(df_incident2016, 'Accident')
-    print(df_incident2016)
-    print(sorted_df_incident2016)
-    print(get_most_accident_coord(df_incident2016, sorted_df_incident2016))
-
-    df_incident2017 = read_data('Accident', '2017')
-    sorted_df_incident2017 = sort_data(df_incident2017, 'Accident')
-    print(df_incident2017)
-    print(sorted_df_incident2017)
-    print(get_most_accident_coord(df_incident2017, sorted_df_incident2017))
-
-    df_incident2018 = read_data('Accident', '2018')
-    sorted_df_incident2018 = sort_data(df_incident2018, 'Accident')
-    print(df_incident2018)
-    print(sorted_df_incident2018)
-    print(get_most_accident_coord(df_incident2018, sorted_df_incident2018))
-
-    analyze_yearly('Vol')
-    analyze_yearly('Accident')
+    # analyze_yearly('Vol')
+    # analyze_yearly('Accident')
 
 
 if __name__ == '__main__':
