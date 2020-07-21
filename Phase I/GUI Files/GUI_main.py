@@ -1,4 +1,3 @@
-
 """
 GUI_main.py
 This file is a project deliverable for Phase I of the ENSF 592 Project Assignment.
@@ -6,9 +5,10 @@ The file runs the GUI for the Calgary Traffic App.
 @Author: J. XU, K. ZHANG, P. KWAN
 @Since: July 19 2020
 """
-import string
 from tkinter import *
 from tkinter import ttk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 from read_db import *
 from Map import *
@@ -111,9 +111,20 @@ class GUI:
 
         self.update_type_year()
 
-        self.status.set("Sucessfully analyzed: " + self.type_)
+        self.clear_frame();
 
-        analyze_yearly(self.type_)
+        fig = Figure()
+        
+        y = [yearly_sum(self.type_, year) for year in range(2016, 2019)]
+
+        fig.add_subplot(111, xticks= range(2016, 2019), xlabel = 'Years', ylabel='Traffic ' + self.type_, title = 'Traffic ' + self.type_ + ' from 2016 - 2018').\
+            plot(range(2016, 2019), y)
+
+        canvas = FigureCanvasTkAgg(fig, master=self.right)  # A tk.DrawingArea.
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=True)
+
+        self.status.set("Sucessfully analyzed: " + self.type_)
 
 
     # The open_map function creates a map with a marker denoting largest value of selected type/year
@@ -135,10 +146,9 @@ class GUI:
                 value = value.strip("(), ")
                 coord_list.append(float(value))
 
-
-            for i in range(1,len(coord_list)):
-                temp = coord_list[i-1]
-                coord_list[i-1] = coord_list[i]
+            for i in range(1, len(coord_list)):
+                temp = coord_list[i - 1]
+                coord_list[i - 1] = coord_list[i]
                 coord_list[i] = temp
 
             map_object = Map(self.type_, self.year, coord_list[:2], loc)
@@ -157,7 +167,7 @@ class GUI:
                 value = value.strip("(), ")
                 coord_list.append(float(value))
 
-            map_object = Map(self.type_, self.year,coord_list, loc)
+            map_object = Map(self.type_, self.year, coord_list, loc)
             map_object.create_Map()
 
         self.status.set("Successfully written to map: \n" + self.type_ + " " + self.year)
@@ -169,18 +179,21 @@ class GUI:
         data_type = self.combobox1.get()
         data_year = self.combobox2.get()
 
-        if data_type == "Traffic Volume":
-            self.type_ = "Vol"
-        else:
-            self.type_ = "Accident"
+        self.type_ = "Vol" if data_type == "Traffic Volume" else "Accident"
 
         self.year = data_year
 
 
+    # Clear_right_frame
+
+    def clear_frame(self):
+        for widget in self.right.winfo_children():
+            widget.destroy()
+
     # The output_table function outputs the table for the read and sort functions. Receives the desired dataframe (df) to be outputted.
 
     def output_table(self, df):
-        self.tree.destroy()
+        self.clear_frame();
 
         cols = list(df.columns)
 

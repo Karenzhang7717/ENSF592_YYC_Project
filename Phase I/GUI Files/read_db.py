@@ -40,32 +40,27 @@ def yearly_sum(type_, year):
     client = MongoClient()
     db = client['CalgaryTraffic' + type_ + str(year)]
     df = pd.DataFrame(list(db[type_ + str(year)].find()))
-    if type_ == 'Vol':
-        return df['volume'].sum()
-    else:
-        return df['count'].sum()
+    return df['volume'].sum() if type_ == 'Vol' else df['count'].sum()
 
 
-def analyze_yearly(type_):
-    """
-    Plot yearly traffic record from 2016 to 2017
-    :param type_: a string of either 'Vol' for traffic volume or 'Accident' for traffic accidents
-    :return: None
-    """
-    y = []
-    for year in range(2016, 2019):
-        y.append(yearly_sum(type_, year))
-    #something about adding subplots
-    
-    plt.figure()
-    
-    plt.plot(range(2016, 2019), y)
-    plt.xlabel('Year')
-    plt.xticks(range(2016, 2019))
-    plt.ylabel('Traffic ' + type_)
-    plt.title('Traffic ' + type_ + ' from 2016 - 2018')
-    plt.show()
-
+# def analyze_yearly(type_):
+#     """
+#     Plot yearly traffic record from 2016 to 2017
+#     :param type_: a string of either 'Vol' for traffic volume or 'Accident' for traffic accidents
+#     :return: None
+#     """
+#     y = []
+#     for year in range(2016, 2019):
+#         y.append(yearly_sum(type_, year))
+#     #something about adding subplots
+#
+#     plt.figure()
+#
+#     plt.plot(range(2016, 2019), y)
+#     plt.xlabel('Year')
+#     plt.xticks(range(2016, 2019))
+#     plt.ylabel('Traffic ' + type_)
+#     plt.title('Traffic ' + type_ + ' from 2016 - 2018')
 
 
 def get_most_vol_coordinate(sorted_df):
