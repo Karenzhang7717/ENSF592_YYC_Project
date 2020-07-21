@@ -115,9 +115,10 @@ class GUI:
 
         fig = Figure()
         
-        y = [yearly_sum(self.type_, year) for year in range(2016, 2019)]
+        y = [yearly_max(self.type_, year) for year in range(2016, 2019)]
 
-        fig.add_subplot(111, xticks= range(2016, 2019), xlabel = 'Years', ylabel='Traffic ' + self.type_, title = 'Traffic ' + self.type_ + ' from 2016 - 2018').\
+        fig.add_subplot(111, xticks= range(2016, 2019), xlabel = 'Years', ylabel='Traffic ' + self.type_, \
+                        title = 'Traffic ' + self.type_ + ' from 2016 - 2018').\
             plot(range(2016, 2019), y)
 
         canvas = FigureCanvasTkAgg(fig, master=self.right)  # A tk.DrawingArea.

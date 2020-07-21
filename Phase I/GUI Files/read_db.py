@@ -12,7 +12,7 @@ def read_data(type_, year):
     """
     client = MongoClient()
     db = client['CalgaryTraffic' + type_ + year]
-    df = pd.DataFrame(list(db[type_ + year].find()))
+    df = pd.DataFrame(list(db[type_ + year].find())).drop(columns = '_id')
     return df
 
 
@@ -30,17 +30,18 @@ def sort_data(df, type_):
             .rename_axis(['incident info', 'incident']).to_frame().reset_index().drop(columns = 'incident')
 
 
-def yearly_sum(type_, year):
+def yearly_max(type_, year):
     """
-    Return the sum of volume for traffic volume, or count for traffic accidents
+    Return the maximum traffic volume or maximum accidents count
     :param type_: a string of either 'Vol' for traffic volume or 'Accident' for traffic accidents
     :param year: a integer: 2016, 2017, or 2018
-    :return: integer sum of volume or count
+    :return: integer maximum traffic volume or accident count
     """
     client = MongoClient()
     db = client['CalgaryTraffic' + type_ + str(year)]
     df = pd.DataFrame(list(db[type_ + str(year)].find()))
-    return df['volume'].sum() if type_ == 'Vol' else df['count'].sum()
+    return df['volume'].max() if type_ == 'Vol' else df.groupby(['incident info'])['count'].value_counts().\
+        sort_values(ascending=False)[0]
 
 
 # def analyze_yearly(type_):
