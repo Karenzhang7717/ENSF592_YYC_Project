@@ -65,7 +65,7 @@ def analyze_yearly(type_):
     plt.ylabel('Traffic ' + type_)
     plt.title('Traffic ' + type_ + ' from 2016 - 2018')
     plt.show()
-    return plt
+
 
 
 def get_most_vol_coordinate(sorted_df):

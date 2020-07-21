@@ -78,110 +78,60 @@ class GUI:
         self.left_.pack(side="left", expand=True, fill="both")
         self.right_.pack(side="right", expand=True, fill="both")
 
+         
+
         # Say its completed
-        print("completed")
+        print("GUI generated")
 
     # The read function reads data of selected type/year onto the right frame
 
     def read(self):
+   
+        self.update_type_year()
 
-        self.tree.destroy()
+        df = read_data(self.type_, self.year_)
 
-        data_type, data_year = self.get_Combobox_value()
-        self.status_.set("Read: " + data_type + " " + data_year)
+        self.output_table(df)
 
-        # TODO add read operation
-
-        if data_type == "Traffic Volume":
-            type_ = "Vol"
-        if data_type == "Traffic Accident":
-            type_ = "Accident"
-
-        df = read_data(type_, data_year)
-
-        cols = list(df.columns)
-        self.tree = ttk.Treeview(self.right_)
-        self.tree["columns"] = cols
-        for i in cols:
-            self.tree.column(i, anchor="w")
-            self.tree.heading(i, text=i, anchor='w')
-
-        for index, row in df.iterrows():
-            self.tree.insert("", "end", text=index, values=list(row))
-
-        self.tree.pack(fill="both", expand=True)
+        self.status_.set("Read: " + self.type_ + " " + self.year_)
 
     # The sorts function sorts data of selected type/year
 
     def sort(self):
+        
+        self.update_type_year()
 
-        self.tree.destroy()
+        df = read_data(self.type_, self.year_)
+        
+        df_sorted = sort_data(df, self.type_)
 
-        data_type, data_year = self.get_Combobox_value()
-        self.status_.set("Sort: " + data_type + " " + data_year)
+        self.output_table(df_sorted)
 
-        if data_type == "Traffic Volume":
-            type_ = "Vol"
-        if data_type == "Traffic Accident":
-            type_ = "Accident"
-
-        df = read_data(type_, data_year)
-
-        df_sorted = sort_data(df, type_)
-
-        cols = list(df_sorted.columns)
-        self.tree = ttk.Treeview(self.right_)
-        self.tree["columns"] = cols
-        for i in cols:
-            self.tree.column(i, anchor="w")
-            self.tree.heading(i, text=i, anchor='w')
-
-        for index, row in df_sorted.iterrows():
-            self.tree.insert("", "end", text=index, values=list(row))
-
-        self.tree.pack(fill="both", expand=1)
+        self.status_.set("Sort: " + self.type_ + " " + self.year_)
 
     # The analyze function analyze data of selected type/year
 
     def analyze(self):
 
-        data_type, data_year = self.get_Combobox_value()
-        self.status_.set("Analyze: " + data_type + " \n" + data_year)
+        self.update_type_year()
 
-        
-        if data_type == "Traffic Volume":
-            type_ = "Vol"
-        if data_type == "Traffic Accident":
-            type_ = "Accident"
+        self.status_.set("Analyze: " + self.type_)
 
+        analyze_yearly(self.type_)
 
-        fig = analyze_yearly(type_)
-        
-        canvas = FigureCanvasTkAgg(fig, self.right_)
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=Tk.BOTTOM, fill=Tk.BOTH, expand=True)
-        
-        
-
-        # TODO add analyze operation
 
     # The open_map function creates a map with a marker denoting largest value of selected type/year
 
     def open_map(self):
 
-        data_type, data_year = self.get_Combobox_value()
-        self.status_.set("Map: " + data_type + " " + data_year)
+        self.update_type_year()
 
-        # TODO add open map operation
-        if data_type == "Traffic Volume":
-            type_ = "Vol"
-            df = read_data(type_, data_year)
-            df_sorted = sort_data(df, type_)
+        if self.type_ == "Vol":
+            
+            df = read_data(self.type_, self.year_)
+            df_sorted = sort_data(df, self.type_)
 
             loc, coord = get_most_vol_coordinate(df_sorted)
-
-            #print(loc)
-            #print(coord)
 
             coord_list = list()
 
@@ -189,28 +139,21 @@ class GUI:
                 value = value.strip("(), ")
                 coord_list.append(float(value))
             
-            #print(coord_list)
 
             for i in range(1,len(coord_list)):
                 temp = coord_list[i-1]
                 coord_list[i-1] = coord_list[i]
                 coord_list[i] = temp
             
-            print(coord_list)
-            coord = coord_list[0:2]
-            
-            print("For year", data_year,"and type",data_type,"the location", loc, "the coordinates",coord_list[0:2])
+            #print("For year", data_year,"and type",data_type,"the location", loc, "the coordinates",coord_list[0:2])
 
-            map_object = Map(data_type, data_year,coord, loc)
+            map_object = Map(self.type_, self.year_,coord_list[:2], loc)
             map_object.create_Map()
-            
-            
+               
+        if self.type_ == "Accident":
 
-        if data_type == "Traffic Accident":
-
-            type_ = "Accident"
-            df = read_data(type_, data_year)
-            df_sorted = sort_data(df, type_)
+            df = read_data(self.type_, self.year_)
+            df_sorted = sort_data(df, self.type_)
 
             loc, coord = get_most_accident_coord(df, df_sorted)
 
@@ -220,30 +163,45 @@ class GUI:
                 value = value.strip("(), ")
                 coord_list.append(float(value))
             
-            print("For year", data_year,"and type",data_type,"the location", loc, "the coordinates",coord_list)
+            print("For year", self.year_,"and type",self.type_,"the location", loc, "the coordinates",coord_list)
 
-            map_object = Map(data_type, data_year,coord_list, loc)
+            map_object = Map(self.type_, self.year_,coord_list, loc)
             map_object.create_Map()
 
-        #def __init__(self, data_kind = 'Traffic_Incidents', data_year = '2017', 
-        # marker_coordinates = [51.03706737,-114.1123288], location = "17 Avenue at Richmond Road SW",  map_base_coordinates = [51.044270, -114.062019]):
-        
-        print("created map object")
-        
+        self.status_.set("Mapping: " + self.type_ + " " + self.year_)
 
+    # Update self.type_ and self.year_
 
-
-
-
-    # This is a getter function for the combobox1_ and combobox2_
-    # Returns a tuple with the format (data_type, data_year)
-
-    def get_Combobox_value(self):
+    def update_type_year(self):
         data_type = self.combobox1_.get()
         data_year = self.combobox2_.get()
 
-        self.status_.set(data_type + " " + data_year)
-        return data_type, data_year
+        if data_type == "Traffic Volume":
+            self.type_ = "Vol"
+        else:
+            self.type_ = "Accident"
+        
+        self.year_ = data_year
+
+    # The output_table function outputs the table for the read and sort functions. Receives the desired dataframe (df) to be outputted.
+
+    def output_table(self, df):
+        self.tree.destroy()
+
+        cols = list(df.columns)
+
+        self.tree = ttk.Treeview(self.right_)
+
+        self.tree["columns"] = cols
+
+        for i in cols:
+            self.tree.column(i, anchor="w")
+            self.tree.heading(i, text=i, anchor='w')
+
+        for index, row in df.iterrows():
+            self.tree.insert("", "end", text=index, values=list(row))
+
+        self.tree.pack(fill="both", expand=True)
 
 
 # The main function creates a tkinter object named root and passes root to a GUI object. The main function houses the mainloop for root
