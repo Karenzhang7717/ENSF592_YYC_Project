@@ -108,7 +108,7 @@ class GUI:
 
         self.output_table(df_sorted)
 
-        self.status.set("Successfully sort: \n" + self.type_ + " " + self.year)
+        self.status.set("Successfully sorted: \n" + self.type_ + " " + self.year)
 
 
 
