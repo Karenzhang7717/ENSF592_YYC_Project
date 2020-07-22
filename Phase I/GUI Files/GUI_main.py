@@ -113,7 +113,7 @@ class GUI:
 
         self.clear_frame();
 
-        fig = Figure()
+        fig = Figure(tight_layout = True)
         
         y = [yearly_max(self.type_, year) for year in range(2016, 2019)]
 
