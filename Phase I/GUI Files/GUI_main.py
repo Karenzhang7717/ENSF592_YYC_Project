@@ -24,6 +24,7 @@ class GUI:
     def __init__(self, master):
         # Assign the master to root
         self.root = master
+        self.root.title("Calgary Traffic 2016 - 2018")
 
         # Create a left and right frame.
         # Left frame contains the combobox and buttons
