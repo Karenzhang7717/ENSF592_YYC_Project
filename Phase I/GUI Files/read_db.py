@@ -52,8 +52,7 @@ def yearly_max(type_, year):
 #     """
 #     y = []
 #     for year in range(2016, 2019):
-#         y.append(yearly_sum(type_, year))
-#     #something about adding subplots
+#         y.append(yearly_max(type_, year))
 #
 #     plt.figure()
 #
