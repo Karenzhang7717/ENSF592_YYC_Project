@@ -78,9 +78,9 @@ def populate_grid_ms(df, label):
                 grid_sum[9-unique_grid[0], unique_grid[1]] += value
                 grid_count[9-unique_grid[0], unique_grid[1]] += 1
 
-    grid = grid_sum/grid_count
-    nans = np.isnan(grid)
-    grid[nans] = 0
+    if grid_count is not 0:
+        grid = grid_sum / grid_count
+
 
     return grid
 
