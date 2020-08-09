@@ -19,6 +19,7 @@ def find_grid_col(long):
         if long >= longs[i] and long < longs[i+1]:
             return i
 
+
 def find_grid_row(lat):
     """
     Return the row index for the given latitude in a 10x10 grid for Calgary.
@@ -33,7 +34,7 @@ def find_grid_row(lat):
 def populate_grid(df):
     """
     Find and return the counts based on the map coordinates in a 10x10 grid for Calgary.
-    :param df: a dataframe with columns longitude and latitude
+    :param df: a dataframe with columns 'longitude' and 'latitude'
     :return: a 2D array (10,10) with counts
     """
     grid = np.zeros((10, 10))
@@ -42,14 +43,51 @@ def populate_grid(df):
         col = find_grid_col(row['longitude'])
         row = find_grid_row(row['latitude'])
 
-        grid[9-row, col] += 1
+        if col is not None and row is not None:
+            grid[9-row, col] += 1
 
     return grid
 
 
+def populate_grid_ms(df, label):
+    """
+    Find the return the averages based on th map coordinates in a 10x10 grid for Calgary.
+    :param df: a dataframe row contain column 'multiline' which is a string containing a sequence of comma-delimited
+    longitudes and latitudes.
+    :param label: label for the column used for grid averages
+    :return: a 2D array (10, 10) with the averages
+    """
+    grid_sum = np.zeros((10, 10))
+    grid_count = np.zeros((10, 10))
+
+    df['multiline'] = df['multiline'].apply(lambda x: str(x).split(','))
+
+    for idx, row in df.iterrows():
+        value = row[label]
+        crossed_grids = []
+        for str_coordinates in row['multiline']:
+            coordinates = str_coordinates.strip().split(' ')
+            long, lat = float(coordinates[0]), float(coordinates[1])
+            col = find_grid_col(long)
+            row = find_grid_row(lat)
+
+            crossed_grids.append((col, row))
+
+        for unique_grid in set(crossed_grids):
+            if unique_grid[0] is not None and unique_grid[1] is not None:
+                grid_sum[9-unique_grid[0], unique_grid[1]] += value
+                grid_count[9-unique_grid[0], unique_grid[1]] += 1
+
+    grid = grid_sum/grid_count
+    nans = np.isnan(grid)
+    grid[nans] = 0
+
+    return grid
+
 
 def get_geojson_grid(upper_right, lower_left):
-    """Returns a grid of geojson rectangles, and computes the exposure in each section of the grid based on the vessel data.
+    """Returns a grid of geojson rectangles, and computes the exposure in each section of the grid based on the vessel
+    data.
 
     Parameters
     ----------
@@ -100,6 +138,12 @@ def get_geojson_grid(upper_right, lower_left):
 
 
 def display_grid_on_map(grid_values, label):
+    """
+    Display grid on map with the specified grid values and labels
+    :param grid_values: 1D array of grid values (100,)
+    :param label: label for map popup
+    :return: Calgary map with 10x10 grid
+    """
     base_coordinates = [51.044270, -114.062019]
     map = folium.Map(location=base_coordinates)
 
