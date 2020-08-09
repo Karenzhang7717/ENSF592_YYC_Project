@@ -21,7 +21,7 @@ def get_accident_counts_by_day():
     Get the accident count by date in Calgary 2018 as a dataframe
     :return:
     """
-    accidents = extract_accidents('Traffic_Incidents.csv', '2018')
+    accidents = extract_accidents('Data/Traffic_Incidents.csv', '2018')
     return accidents['date'].value_counts().to_frame().rename(columns={'date': 'Accident Count'})
 
 def get_accident_counts_by_location():
@@ -29,5 +29,5 @@ def get_accident_counts_by_location():
     Get the accident count by location in Calgary 2018 as a dataframe
     :return:
     """
-    accidents = extract_accidents('Traffic_Incidents.csv', '2018')
+    accidents = extract_accidents('Data/Traffic_Incidents.csv', '2018')
     return accidents['location'].value_counts().to_frame().rename(columns={'location': 'Accident Count'})
