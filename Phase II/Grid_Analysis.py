@@ -160,3 +160,28 @@ def display_grid_on_map(grid_values, label):
         map.add_child(gj)
 
     return map
+
+def display_grid_on_map_combined(grid_values, label):
+    """
+    Display grid on map with the specified grid values and labels
+    :param grid_values: 1D array of grid values (100,)
+    :param label: label for map popup
+    :return: Calgary map with 10x10 grid
+    """
+    base_coordinates = [51.044270, -114.062019]
+    map = folium.Map(location=base_coordinates)
+
+    grid = get_geojson_grid(lower_left, upper_right)
+
+    for i, geo_json in enumerate(grid):
+        gj = folium.GeoJson(geo_json)
+        popup_str = ''
+        for j in range(len(label)):
+            popup_str += label[j] + ": " + str(grid_values[j][i]) + "\n"
+        popup = folium.Popup(popup_str)
+        gj.add_child(popup)
+
+        map.add_child(gj)
+
+    return map
+
